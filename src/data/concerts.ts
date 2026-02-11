@@ -1,56 +1,137 @@
 import type { Concert } from './types';
 
-// Concert data - edit this file to add/update concerts
-
-export const concerts: Concert[] = [
-  {
-    id: "1",
-    slug: "the-consequences-february-2026",
-    artistName: "The Consequences",
-    date: "2026-02-14",
-    doorsTime: "6:00 PM",
-    showTime: "7:00 PM",
-    suggestedDonation: "$20",
-    shortDescription: "Award-winning Irish traditional band featuring concertina, fiddle, bodhrán, and piano.",
-    fullDescription: `Get ready for an amazing night of Irish traditional music with The Consequences!
-
-There will also be a session after the show, so bring your instruments if you got 'em!`,
-    artistBio: `Driven by a passion for exploring the colors and complexities of Irish music, The Consequences are a new Irish traditional band founded by Lexie Boatright (concertina & harp), Jake James (fiddle), Cara Wildman (bodhrán & dance), and Ryan Ward (piano & piano accordion). Award-winning soloists in their own right, the quartet comes together to create a dynamic and enthralling sound with a combination of traditional and original tunes.
-
-Lexie Boatright is a multiple All-Ireland award-winning harpist and concertina player and executive director of the Baltimore-Washington Academy of Irish Culture.
-
-Jake James is a two-time All-Ireland fiddle champion from Queens, NYC. The Irish Echo called his 2018 album Firewood an "outstanding debut solo recording."
-
-Cara Wildman is a highly sought after bodhrán player at the cutting edge of the instrument's modern development. She was the 2021 All-Ireland Fleadhfest champion and has a Masters in Irish Traditional Music Performance from the University of Limerick.
-
-Ryan Ward is an award-winning pianist and accordion player from NYC. He is a Senior All-Ireland Accompaniment Champion and a highly sought after accompanist in the NY area.`,
     artistWebsite: "https://theconsequencesband.com/home",
-    youtubeVideoId: "9jKpjU9RDU8",
-    featuredImage: "https://d10j3mvrs1suex.cloudfront.net/s:bzglfiles/u/684926/935add7e27569408466d6612b01eefed7020809b/original/promo-photo2.jpg/!!/b%3AW1sic2l6ZSIsInBob3RvIl1d/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.jpg",
-    rsvpLink: "",
-    status: "upcoming"
-  }
-];
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVhgVuW7L0f5cESZWBVcgU0PcU3kwa_kiXAIBetchgrVc6hCOTwSspzlYBG1iExoE56CEGZ9bNcsoO/pub?gid=0&single=true&output=csv';
 
-// Helper functions
-export function getUpcomingConcerts(): Concert[] {
+// Parse CSV text into array of objects, handling multi-line quoted fields
+function parseCSV(csv: string): Record<string, string>[] {
+  const rows: string[][] = [];
+  let currentRow: string[] = [];
+  let currentField = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < csv.length; i++) {
+    const char = csv[i];
+    const nextChar = csv[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote
+        currentField += '"';
+        i++;
+      } else {
+        // Toggle quote mode
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      currentRow.push(currentField);
+      currentField = '';
+    } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+      currentRow.push(currentField);
+      if (currentRow.some(field => field.trim() !== '')) {
+        rows.push(currentRow);
+      }
+      currentRow = [];
+      currentField = '';
+      if (char === '\r') i++; // Skip \n in \r\n
+    } else if (char !== '\r') {
+      currentField += char;
+    }
+  }
+
+  // Don't forget the last row
+  if (currentField || currentRow.length > 0) {
+    currentRow.push(currentField);
+    if (currentRow.some(field => field.trim() !== '')) {
+      rows.push(currentRow);
+    }
+  }
+
+  if (rows.length === 0) return [];
+
+  const headers = rows[0];
+  return rows.slice(1).map(row => {
+    const obj: Record<string, string> = {};
+    headers.forEach((header, i) => {
+      obj[header.trim()] = row[i] || '';
+    });
+    return obj;
+  });
+}
+
+// Fetch and parse concerts from Google Sheets
+export async function fetchConcerts(): Promise<Concert[]> {
+  const response = await fetch(SHEET_URL);
+  const csv = await response.text();
+  const rows = parseCSV(csv);
+
+  return rows
+    .filter(row => row.slug && row.slug.trim() !== '')
+    .map(row => ({
+    id: row.id || '',
+    slug: row.slug || '',
+    artistName: row.artistName || '',
+    date: row.date || '',
+    doorsTime: row.doorsTime || '',
+    showTime: row.showTime || '',
+    suggestedDonation: row.suggestedDonation || '',
+    shortDescription: row.shortDescription || '',
+    fullDescription: row.fullDescription || '',
+    artistBio: row.artistBio || '',
+    artistWebsite: row.artistWebsite || undefined,
+    artistSpotify: row.artistSpotify || undefined,
+    artistInstagram: row.artistInstagram || undefined,
+    featuredImage: row.featuredImage || '',
+    artistImage: row.artistImage || undefined,
+    youtubeVideoId: row.youtubeVideoId || undefined,
+    rsvpLink: row.rsvpLink || '',
+    status: determineStatus(row.date, row.status),
+  }));
+}
+
+// Determine status based on date and optional override
+function determineStatus(dateString: string, manualStatus?: string): 'upcoming' | 'past' | 'cancelled' {
+  // If manually set to cancelled or hidden, respect that
+  if (manualStatus === 'cancelled' || manualStatus === 'hidden') {
+    return 'cancelled';
+  }
+
+  // Otherwise, calculate from date
+  const [year, month, day] = dateString.split('-').map(Number);
+  const concertDate = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return concertDate >= today ? 'upcoming' : 'past';
+}
+
+// Helper functions that work with fetched data
+export function getUpcomingConcerts(concerts: Concert[]): Concert[] {
   return concerts
     .filter(c => c.status === 'upcoming')
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => {
+      const [aYear, aMonth, aDay] = a.date.split('-').map(Number);
+      const [bYear, bMonth, bDay] = b.date.split('-').map(Number);
+      return new Date(aYear, aMonth - 1, aDay).getTime() - new Date(bYear, bMonth - 1, bDay).getTime();
+    });
 }
 
-export function getPastConcerts(): Concert[] {
+export function getPastConcerts(concerts: Concert[]): Concert[] {
   return concerts
     .filter(c => c.status === 'past')
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort((a, b) => {
+      const [aYear, aMonth, aDay] = a.date.split('-').map(Number);
+      const [bYear, bMonth, bDay] = b.date.split('-').map(Number);
+      return new Date(bYear, bMonth - 1, bDay).getTime() - new Date(aYear, aMonth - 1, aDay).getTime();
+    });
 }
 
-export function getConcertBySlug(slug: string): Concert | undefined {
+export function getConcertBySlug(concerts: Concert[], slug: string): Concert | undefined {
   return concerts.find(c => c.slug === slug);
 }
 
-export function getNextConcert(): Concert | undefined {
-  const upcoming = getUpcomingConcerts();
+export function getNextConcert(concerts: Concert[]): Concert | undefined {
+  const upcoming = getUpcomingConcerts(concerts);
   return upcoming.length > 0 ? upcoming[0] : undefined;
 }
 

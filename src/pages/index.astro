@@ -1,10 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ConcertCard from '../components/ConcertCard.astro';
-import { getNextConcert, getUpcomingConcerts, formatDate } from '../data/concerts';
+import { fetchConcerts, getNextConcert, getUpcomingConcerts, formatDate } from '../data/concerts';
 
-const nextConcert = getNextConcert();
-const upcomingConcerts = getUpcomingConcerts().slice(0, 3);
+const concerts = await fetchConcerts();
+const nextConcert = getNextConcert(concerts);
+const upcomingConcerts = getUpcomingConcerts(concerts).slice(0, 3);
 ---
 
 <Layout title="Home">

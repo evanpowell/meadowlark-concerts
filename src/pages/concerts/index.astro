@@ -1,10 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ConcertCard from '../../components/ConcertCard.astro';
-import { getUpcomingConcerts, getPastConcerts } from '../../data/concerts';
+import { fetchConcerts, getUpcomingConcerts, getPastConcerts } from '../../data/concerts';
 
-const upcomingConcerts = getUpcomingConcerts();
-const pastConcerts = getPastConcerts();
+const concerts = await fetchConcerts();
+const upcomingConcerts = getUpcomingConcerts(concerts);
+const pastConcerts = getPastConcerts(concerts);
 ---
 
 <Layout title="Concerts" description="View upcoming and past concerts at the Meadowlark Concert Series in South Austin">

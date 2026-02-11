@@ -1,16 +1,17 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { concerts, getConcertBySlug, formatDate } from '../../data/concerts';
+import { fetchConcerts, getConcertBySlug, formatDate } from '../../data/concerts';
 import { venue } from '../../data/types';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const concerts = await fetchConcerts();
   return concerts.map(concert => ({
     params: { slug: concert.slug },
+    props: { concert },
   }));
 }
 
-const { slug } = Astro.params;
-const concert = getConcertBySlug(slug);
+const { concert } = Astro.props;
 
 if (!concert) {
   return Astro.redirect('/concerts');
