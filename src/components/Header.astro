@@ -6,6 +6,14 @@ const navLinks = [
   { href: '/concerts', label: 'Concerts' },
   { href: '/contact', label: 'Contact' },
 ];
+
+function isActive(href: string): boolean {
+  if (href === '/') {
+    return currentPath === '/' || currentPath === '';
+  }
+  // Check if current path starts with the link href (handles trailing slashes and sub-pages)
+  return currentPath.startsWith(href);
+}
 ---
 
 <header class="bg-meadow text-white">
@@ -21,7 +29,7 @@ const navLinks = [
               href={link.href}
               class:list={[
                 "hover:text-warm-light transition-colors",
-                currentPath === link.href && "text-warm-light border-b-2 border-warm-light"
+                isActive(link.href) && "text-warm-light border-b-2 border-warm-light"
               ]}
             >
               {link.label}
