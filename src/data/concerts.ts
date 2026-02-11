@@ -1,73 +1,37 @@
 import type { Concert } from './types';
 
-// Sample concerts data - this will be replaced with Google Sheets integration
-// For now, edit this file directly to manage concerts
+// Concert data - edit this file to add/update concerts
 
 export const concerts: Concert[] = [
   {
     id: "1",
-    slug: "sarah-jones-trio-march-2025",
-    artistName: "Sarah Jones Trio",
-    date: "2025-03-15",
-    doorsTime: "6:30 PM",
+    slug: "the-consequences-february-2026",
+    artistName: "The Consequences",
+    date: "2026-02-14",
+    doorsTime: "6:00 PM",
     showTime: "7:00 PM",
-    suggestedDonation: "$20-30",
-    shortDescription: "Folk and Americana trio featuring beautiful harmonies and original songwriting.",
-    fullDescription: `Join us for an evening with the Sarah Jones Trio, a folk and Americana group known for their stunning three-part harmonies and heartfelt original songs.
+    suggestedDonation: "$20",
+    shortDescription: "Award-winning Irish traditional band featuring concertina, fiddle, bodhrán, and piano.",
+    fullDescription: `The amazing Irish trad band The Consequences will be performing at the Meadowlark Concert Series on Saturday, February 14th. Get ready for an amazing night of music!
 
-Sarah's songwriting draws from the rich traditions of Texas country and Appalachian folk, weaving stories of love, loss, and the landscapes of the American Southwest.
+Some food and drink will be provided, but feel free to bring snacks or beverages to share if you feel inclined. There will also be a session after the show, so bring your instruments if you got 'em!
 
-This intimate house concert setting is the perfect way to experience their music up close.`,
-    artistBio: `Sarah Jones is an Austin-based singer-songwriter who has been crafting folk and Americana music for over a decade. Her trio, featuring longtime collaborators on guitar and upright bass, has performed at venues across Texas and the Southwest.
+Though there is a decent amount of seating, if you have a folding chair it's not a bad idea to bring it just in case.
 
-Their debut album "Wildflower Highway" received critical acclaim from Austin Chronicle and was featured on KUTX's Local Live.`,
-    artistWebsite: "https://example.com/sarahjones",
-    artistSpotify: "https://open.spotify.com/artist/example",
-    artistInstagram: "https://instagram.com/sarahjonestrio",
-    featuredImage: "/images/placeholder-concert.svg",
-    artistImage: "/images/placeholder-artist.svg",
-    rsvpLink: "https://forms.google.com/your-form-link",
-    status: "upcoming"
-  },
-  {
-    id: "2",
-    slug: "michael-chen-april-2025",
-    artistName: "Michael Chen",
-    date: "2025-04-12",
-    doorsTime: "6:30 PM",
-    showTime: "7:00 PM",
-    suggestedDonation: "$25-35",
-    shortDescription: "Fingerstyle guitarist blending jazz, classical, and world music influences.",
-    fullDescription: `Experience the virtuosic fingerstyle guitar of Michael Chen in an intimate house concert setting.
+100% of the proceeds will go to the performers.`,
+    artistBio: `Driven by a passion for exploring the colors and complexities of Irish music, The Consequences are a new Irish traditional band founded by Lexie Boatright (concertina & harp), Jake James (fiddle), Cara Wildman (bodhrán & dance), and Ryan Ward (piano & piano accordion). Award-winning soloists in their own right, the quartet comes together to create a dynamic and enthralling sound with a combination of traditional and original tunes.
 
-Michael's unique approach blends jazz improvisation with classical technique and influences from Brazilian music, creating a sound that's both technically impressive and deeply emotional.
+Lexie Boatright is a multiple All-Ireland award-winning harpist and concertina player and executive director of the Baltimore-Washington Academy of Irish Culture.
 
-This will be a seated concert with a listening room atmosphere - the perfect setting for Michael's nuanced playing.`,
-    artistBio: `Michael Chen is a fingerstyle guitarist based in Austin, Texas. A graduate of the University of North Texas Jazz Studies program, Michael has developed a distinctive voice on the acoustic guitar that draws from multiple traditions.
+Jake James is a two-time All-Ireland fiddle champion from Queens, NYC. The Irish Echo called his 2018 album Firewood an "outstanding debut solo recording."
 
-He has released three solo albums and has toured throughout the United States and Europe. His most recent album "River Currents" was recorded live at the Cactus Cafe.`,
-    artistWebsite: "https://example.com/michaelchen",
-    featuredImage: "/images/placeholder-concert.svg",
-    artistImage: "/images/placeholder-artist.svg",
-    rsvpLink: "https://forms.google.com/your-form-link",
-    status: "upcoming"
-  },
-  {
-    id: "3",
-    slug: "luna-collective-january-2025",
-    artistName: "Luna Collective",
-    date: "2025-01-18",
-    doorsTime: "6:30 PM",
-    showTime: "7:00 PM",
-    suggestedDonation: "$20-30",
-    shortDescription: "Indie folk band with dreamy vocals and atmospheric arrangements.",
-    fullDescription: `Luna Collective brought their dreamy indie folk sound to the Meadowlark stage for a magical winter evening.
+Cara Wildman is a highly sought after bodhrán player at the cutting edge of the instrument's modern development. She was the 2021 All-Ireland Fleadhfest champion and has a Masters in Irish Traditional Music Performance from the University of Limerick.
 
-The four-piece band created an atmosphere of warmth and wonder with their layered arrangements and ethereal harmonies.`,
-    artistBio: `Luna Collective is an Austin-based indie folk band formed in 2020. Their sound combines lush vocal harmonies with atmospheric instrumentation, creating a dreamy sonic landscape.`,
-    featuredImage: "/images/placeholder-concert.svg",
+Ryan Ward is an award-winning pianist and accordion player from NYC. He is a Senior All-Ireland Accompaniment Champion and a highly sought after accompanist in the NY area.`,
+    artistWebsite: "https://theconsequencesband.com/home",
+    featuredImage: "https://d10j3mvrs1suex.cloudfront.net/s:bzglfiles/u/684926/935add7e27569408466d6612b01eefed7020809b/original/promo-photo2.jpg/!!/b%3AW1sic2l6ZSIsInBob3RvIl1d/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.jpg",
     rsvpLink: "",
-    status: "past"
+    status: "upcoming"
   }
 ];
 
