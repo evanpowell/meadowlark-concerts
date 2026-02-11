@@ -163,8 +163,7 @@ const isPast = concert.status === 'past';
             <h3 class="text-xl font-bold text-charcoal mb-3">{venue.name}</h3>
             <address class="not-italic text-gray-600 mb-4">
               {venue.address}<br />
-              {venue.city}, {venue.state} {venue.zip}<br />
-              <span class="text-meadow">{venue.neighborhood}, South Austin</span>
+              {venue.city}, {venue.state} {venue.zip}
             </address>
             <a
               href={`https://maps.google.com/?q=${encodeURIComponent(`${venue.address}, ${venue.city}, ${venue.state} ${venue.zip}`)}`}
