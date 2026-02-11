@@ -40,7 +40,7 @@ if (!concert) {
         </div>
 
         <form id="rsvp-form" class="space-y-4">
-          <input type="hidden" id="concert" value={`${concert.artistName} - ${formatDate(concert.date)}`} />
+          <input type="hidden" id="concert" value={`${concert.artistName} | ${formatDate(concert.date)} | Doors: ${concert.doorsTime} | Show: ${concert.showTime}`} />
 
           <div>
             <label for="name" class="block text-sm font-medium text-charcoal mb-1">
