@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#e8c9a8"/>
+  <rect x="150" y="100" width="100" height="80" rx="5" fill="#4a7c59"/>
+  <circle cx="200" cy="130" r="20" fill="#faf8f5"/>
+  <rect x="185" y="155" width="30" height="15" fill="#faf8f5"/>
+  <text x="200" y="220" text-anchor="middle" fill="#4a7c59" font-family="Georgia, serif" font-size="14">Concert Image</text>
+</svg>

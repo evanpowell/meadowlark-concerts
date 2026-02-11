@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Thank You" description="Thanks for signing up for the Meadowlark Concert Series mailing list">
+  <section class="py-24 bg-cream">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+      <div class="w-20 h-20 bg-meadow rounded-full flex items-center justify-center mx-auto mb-8">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <h1 class="text-4xl font-bold text-meadow-dark mb-4">Thank You!</h1>
+
+      <p class="text-xl text-gray-600 mb-8">
+        You've been added to the Meadowlark Concert Series mailing list.
+        We'll be in touch when we have upcoming concerts to share.
+      </p>
+
+      <div class="space-y-4">
+        <a
+          href="/concerts"
+          class="inline-block bg-meadow hover:bg-meadow-dark text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+        >
+          View Upcoming Concerts
+        </a>
+        <p>
+          <a href="/" class="text-meadow hover:text-meadow-dark transition-colors">
+            &larr; Back to Home
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

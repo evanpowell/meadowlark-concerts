@@ -1,0 +1,58 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ConcertCard from '../../components/ConcertCard.astro';
+import { getUpcomingConcerts, getPastConcerts } from '../../data/concerts';
+
+const upcomingConcerts = getUpcomingConcerts();
+const pastConcerts = getPastConcerts();
+---
+
+<Layout title="Concerts" description="View upcoming and past concerts at the Meadowlark Concert Series in South Austin">
+  <!-- Page Header -->
+  <section class="bg-meadow text-white py-12">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h1 class="text-4xl font-bold mb-4">Concerts</h1>
+      <p class="text-xl text-white/90">
+        Upcoming shows and memories from past performances
+      </p>
+    </div>
+  </section>
+
+  <!-- Upcoming Concerts -->
+  <section class="py-12 bg-cream">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-meadow-dark mb-8">Upcoming Concerts</h2>
+
+      {upcomingConcerts.length > 0 ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {upcomingConcerts.map(concert => (
+            <ConcertCard concert={concert} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12 bg-white rounded-lg">
+          <p class="text-gray-600 text-lg mb-4">No upcoming concerts scheduled yet.</p>
+          <p class="text-gray-500">
+            <a href="/contact#signup" class="text-meadow hover:text-meadow-dark">
+              Join our mailing list
+            </a> to be the first to know when we announce new shows!
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Past Concerts -->
+  {pastConcerts.length > 0 && (
+    <section class="py-12 bg-white">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-meadow-dark mb-8">Past Concerts</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pastConcerts.map(concert => (
+            <ConcertCard concert={concert} showStatus={true} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>

@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ConcertCard from '../components/ConcertCard.astro';
+import { getNextConcert, getUpcomingConcerts, formatDate } from '../data/concerts';
+
+const nextConcert = getNextConcert();
+const upcomingConcerts = getUpcomingConcerts().slice(0, 3);
+---
+
+<Layout title="Home">
+  <!-- Hero Section -->
+  <section class="bg-meadow text-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
+        Meadowlark Concert Series
+      </h1>
+      <p class="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mb-8">
+        Intimate house concerts in the Bauerle Ranch neighborhood of South Austin
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/concerts"
+          class="bg-warm hover:bg-warm-light text-charcoal font-semibold px-8 py-3 rounded-lg transition-colors"
+        >
+          View Concerts
+        </a>
+        <a
+          href="/contact#signup"
+          class="border-2 border-white hover:bg-white hover:text-meadow px-8 py-3 rounded-lg transition-colors"
+        >
+          Join Mailing List
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="py-16 bg-cream">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-meadow-dark mb-6 text-center">
+        Welcome to Meadowlark
+      </h2>
+      <div class="prose prose-lg mx-auto text-charcoal">
+        <p class="text-lg leading-relaxed mb-4">
+          The Meadowlark Concert Series brings exceptional musicians to an intimate setting
+          in South Austin. Our house concerts create a unique listening experience where artists
+          and audience connect in a way that's simply not possible in larger venues.
+        </p>
+        <p class="text-lg leading-relaxed">
+          Each concert is limited in size to maintain the intimate atmosphere. We provide seating,
+          and guests are welcome to bring their own refreshments. A suggested donation goes directly
+          to the performing artists.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured/Next Concert -->
+  {nextConcert && (
+    <section class="py-16 bg-white">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-meadow-dark mb-8 text-center">
+          Next Concert
+        </h2>
+        <div class="max-w-4xl mx-auto bg-cream rounded-xl overflow-hidden shadow-lg">
+          <div class="md:flex">
+            <div class="md:w-1/2">
+              <img
+                src={nextConcert.featuredImage}
+                alt={nextConcert.artistName}
+                class="w-full h-64 md:h-full object-cover"
+              />
+            </div>
+            <div class="md:w-1/2 p-8">
+              <div class="text-warm font-semibold mb-2">
+                {formatDate(nextConcert.date)}
+              </div>
+              <h3 class="text-2xl font-bold text-charcoal mb-3">
+                {nextConcert.artistName}
+              </h3>
+              <p class="text-gray-600 mb-4">
+                {nextConcert.shortDescription}
+              </p>
+              <div class="text-sm text-gray-500 mb-6">
+                <p>Doors: {nextConcert.doorsTime} | Show: {nextConcert.showTime}</p>
+                <p>Suggested Donation: {nextConcert.suggestedDonation}</p>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <a
+                  href={`/concerts/${nextConcert.slug}`}
+                  class="bg-meadow hover:bg-meadow-dark text-white font-semibold px-6 py-2 rounded-lg transition-colors text-center"
+                >
+                  Learn More
+                </a>
+                <a
+                  href={`/rsvp/${nextConcert.slug}`}
+                  class="bg-warm hover:bg-warm-light text-charcoal font-semibold px-6 py-2 rounded-lg transition-colors text-center"
+                >
+                  RSVP Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Upcoming Concerts Preview -->
+  {upcomingConcerts.length > 1 && (
+    <section class="py-16 bg-cream">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-meadow-dark mb-8 text-center">
+          Upcoming Concerts
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {upcomingConcerts.map(concert => (
+            <ConcertCard concert={concert} />
+          ))}
+        </div>
+        <div class="text-center mt-8">
+          <a
+            href="/concerts"
+            class="text-meadow hover:text-meadow-dark font-semibold transition-colors"
+          >
+            View All Concerts &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- How It Works -->
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-meadow-dark mb-12 text-center">
+        How It Works
+      </h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-meadow rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-white text-2xl font-bold">1</span>
+          </div>
+          <h3 class="text-xl font-bold text-charcoal mb-2">RSVP</h3>
+          <p class="text-gray-600">
+            Reserve your spot for an upcoming concert. Space is limited to maintain the intimate atmosphere.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 bg-meadow rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-white text-2xl font-bold">2</span>
+          </div>
+          <h3 class="text-xl font-bold text-charcoal mb-2">Arrive</h3>
+          <p class="text-gray-600">
+            Come to our home in Bauerle Ranch. Doors open one hour before showtime.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 bg-meadow rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-white text-2xl font-bold">3</span>
+          </div>
+          <h3 class="text-xl font-bold text-charcoal mb-2">Enjoy</h3>
+          <p class="text-gray-600">
+            Experience live music in an intimate setting. Donations go directly to the artists.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

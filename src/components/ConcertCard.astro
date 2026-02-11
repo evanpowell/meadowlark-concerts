@@ -1,0 +1,53 @@
+---
+import type { Concert } from '../data/types';
+import { formatDate } from '../data/concerts';
+
+interface Props {
+  concert: Concert;
+  showStatus?: boolean;
+}
+
+const { concert, showStatus = false } = Astro.props;
+const isPast = concert.status === 'past';
+---
+
+<article class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+  <a href={`/concerts/${concert.slug}`} class="block">
+    <div class="relative">
+      <img
+        src={concert.featuredImage}
+        alt={concert.artistName}
+        class:list={[
+          "w-full h-48 object-cover",
+          isPast && "grayscale-[30%]"
+        ]}
+      />
+      {showStatus && (
+        <span
+          class:list={[
+            "absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold",
+            isPast ? "bg-gray-500 text-white" : "bg-meadow text-white"
+          ]}
+        >
+          {isPast ? 'Past' : 'Upcoming'}
+        </span>
+      )}
+    </div>
+    <div class="p-5">
+      <div class="text-warm text-sm font-semibold mb-1">
+        {formatDate(concert.date)}
+      </div>
+      <h3 class="text-xl font-bold text-charcoal mb-2">
+        {concert.artistName}
+      </h3>
+      <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+        {concert.shortDescription}
+      </p>
+      {!isPast && (
+        <div class="text-xs text-gray-500">
+          {concert.showTime} | {concert.suggestedDonation}
+        </div>
+      )}
+    </div>
+  </a>
+</article>

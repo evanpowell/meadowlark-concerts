@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="RSVP Confirmed" description="Your RSVP has been received">
+  <section class="py-24 bg-cream">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+      <div class="w-20 h-20 bg-meadow rounded-full flex items-center justify-center mx-auto mb-8">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <h1 class="text-4xl font-bold text-meadow-dark mb-4">You're on the List!</h1>
+
+      <p class="text-xl text-gray-600 mb-8">
+        Thanks for your RSVP. We'll send you a confirmation email with all the details
+        you need for the concert.
+      </p>
+
+      <div class="bg-white rounded-lg p-6 shadow-sm mb-8 text-left max-w-md mx-auto">
+        <h2 class="font-semibold text-charcoal mb-3">What to expect:</h2>
+        <ul class="text-gray-600 space-y-2">
+          <li class="flex items-start gap-2">
+            <span class="text-meadow">&#10003;</span>
+            Confirmation email with address details
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-meadow">&#10003;</span>
+            Reminder email a few days before the show
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-meadow">&#10003;</span>
+            Doors open one hour before showtime
+          </li>
+        </ul>
+      </div>
+
+      <div class="space-y-4">
+        <a
+          href="/concerts"
+          class="inline-block bg-meadow hover:bg-meadow-dark text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+        >
+          View All Concerts
+        </a>
+        <p>
+          <a href="/" class="text-meadow hover:text-meadow-dark transition-colors">
+            &larr; Back to Home
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,218 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { concerts, getConcertBySlug, formatDate } from '../../data/concerts';
+import { venue } from '../../data/types';
+
+export function getStaticPaths() {
+  return concerts.map(concert => ({
+    params: { slug: concert.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const concert = getConcertBySlug(slug);
+
+if (!concert) {
+  return Astro.redirect('/concerts');
+}
+
+const isPast = concert.status === 'past';
+---
+
+<Layout title={concert.artistName} description={concert.shortDescription}>
+  <!-- Hero Section -->
+  <section class="relative">
+    <div class="absolute inset-0 bg-charcoal/70 z-10"></div>
+    <img
+      src={concert.featuredImage}
+      alt={concert.artistName}
+      class="w-full h-64 md:h-80 object-cover"
+    />
+    <div class="absolute inset-0 z-20 flex items-center justify-center">
+      <div class="text-center text-white px-4">
+        <p class="text-warm text-lg mb-2">{formatDate(concert.date)}</p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">{concert.artistName}</h1>
+        {!isPast && (
+          <a
+            href={`/rsvp/${concert.slug}`}
+            class="inline-block bg-warm hover:bg-warm-light text-charcoal font-semibold px-8 py-3 rounded-lg transition-colors"
+          >
+            RSVP Now
+          </a>
+        )}
+        {isPast && (
+          <span class="inline-block bg-gray-500 text-white px-6 py-2 rounded-lg">
+            Past Event
+          </span>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation -->
+  <nav class="bg-white border-b sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4">
+      <ul class="flex gap-6 overflow-x-auto py-4 text-sm">
+        <li><a href="#details" class="text-meadow hover:text-meadow-dark font-medium">Details</a></li>
+        <li><a href="#about" class="text-meadow hover:text-meadow-dark font-medium">About the Artist</a></li>
+        <li><a href="#location" class="text-meadow hover:text-meadow-dark font-medium">Location</a></li>
+        {!isPast && <li><a href="#rsvp" class="text-meadow hover:text-meadow-dark font-medium">RSVP</a></li>}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Concert Details -->
+  <section id="details" class="py-12 bg-cream">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-meadow-dark mb-6">Concert Details</h2>
+
+      <div class="bg-white rounded-lg p-6 shadow-sm mb-8">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-sm font-semibold text-gray-500 uppercase mb-2">Date & Time</h3>
+            <p class="text-lg text-charcoal">{formatDate(concert.date)}</p>
+            <p class="text-gray-600">Doors: {concert.doorsTime}</p>
+            <p class="text-gray-600">Show: {concert.showTime}</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-gray-500 uppercase mb-2">Suggested Donation</h3>
+            <p class="text-2xl font-bold text-meadow">{concert.suggestedDonation}</p>
+            <p class="text-gray-600 text-sm">100% goes to the artist</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose prose-lg max-w-none">
+        {concert.fullDescription.split('\n\n').map(paragraph => (
+          <p class="text-charcoal mb-4">{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- About the Artist -->
+  <section id="about" class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-meadow-dark mb-6">About the Artist</h2>
+
+      <div class="md:flex gap-8">
+        {concert.artistImage && (
+          <div class="md:w-1/3 mb-6 md:mb-0">
+            <img
+              src={concert.artistImage}
+              alt={concert.artistName}
+              class="w-full rounded-lg shadow-md"
+            />
+          </div>
+        )}
+        <div class:list={[concert.artistImage ? "md:w-2/3" : "w-full"]}>
+          <div class="prose prose-lg max-w-none">
+            {concert.artistBio.split('\n\n').map(paragraph => (
+              <p class="text-charcoal mb-4">{paragraph}</p>
+            ))}
+          </div>
+
+          <!-- Artist Links -->
+          {(concert.artistWebsite || concert.artistSpotify || concert.artistInstagram) && (
+            <div class="mt-6 flex flex-wrap gap-4">
+              {concert.artistWebsite && (
+                <a
+                  href={concert.artistWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-meadow hover:text-meadow-dark transition-colors"
+                >
+                  Website &rarr;
+                </a>
+              )}
+              {concert.artistSpotify && (
+                <a
+                  href={concert.artistSpotify}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-meadow hover:text-meadow-dark transition-colors"
+                >
+                  Spotify &rarr;
+                </a>
+              )}
+              {concert.artistInstagram && (
+                <a
+                  href={concert.artistInstagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-meadow hover:text-meadow-dark transition-colors"
+                >
+                  Instagram &rarr;
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Location -->
+  <section id="location" class="py-12 bg-cream">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-meadow-dark mb-6">Location</h2>
+
+      <div class="bg-white rounded-lg p-6 shadow-sm">
+        <div class="md:flex gap-8">
+          <div class="md:w-1/2 mb-6 md:mb-0">
+            <h3 class="text-xl font-bold text-charcoal mb-3">{venue.name}</h3>
+            <address class="not-italic text-gray-600 mb-4">
+              {venue.address}<br />
+              {venue.city}, {venue.state} {venue.zip}<br />
+              <span class="text-meadow">{venue.neighborhood}, South Austin</span>
+            </address>
+            <a
+              href={`https://maps.google.com/?q=${encodeURIComponent(`${venue.address}, ${venue.city}, ${venue.state} ${venue.zip}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-meadow hover:text-meadow-dark transition-colors"
+            >
+              Get Directions &rarr;
+            </a>
+          </div>
+          <div class="md:w-1/2">
+            <h4 class="font-semibold text-charcoal mb-2">Parking</h4>
+            <p class="text-gray-600 text-sm mb-4">{venue.parkingInfo}</p>
+            <h4 class="font-semibold text-charcoal mb-2">When You Arrive</h4>
+            <p class="text-gray-600 text-sm">{venue.additionalInfo}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP Section -->
+  {!isPast && (
+    <section id="rsvp" class="py-12 bg-meadow text-white">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Ready to Join Us?</h2>
+        <p class="text-xl text-white/90 mb-8">
+          Space is limited. Reserve your spot for {concert.artistName}!
+        </p>
+        <a
+          href={`/rsvp/${concert.slug}`}
+          class="inline-block bg-warm hover:bg-warm-light text-charcoal font-semibold px-10 py-4 rounded-lg text-lg transition-colors"
+        >
+          RSVP Now
+        </a>
+        <p class="mt-4 text-white/90 text-sm">
+          Suggested donation: {concert.suggestedDonation}
+        </p>
+      </div>
+    </section>
+  )}
+
+  <!-- Back to Concerts -->
+  <section class="py-8 bg-cream">
+    <div class="max-w-4xl mx-auto px-4">
+      <a href="/concerts" class="text-meadow hover:text-meadow-dark transition-colors">
+        &larr; Back to All Concerts
+      </a>
+    </div>
+  </section>
+</Layout>

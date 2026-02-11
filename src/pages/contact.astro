@@ -1,0 +1,225 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { venue } from '../data/types';
+---
+
+<Layout title="Contact" description="Get in touch with the Meadowlark Concert Series or sign up for our mailing list">
+  <!-- Page Header -->
+  <section class="bg-meadow text-white py-12">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h1 class="text-4xl font-bold mb-4">Contact Us</h1>
+      <p class="text-xl text-white/90">
+        Questions? Want to perform? We'd love to hear from you.
+      </p>
+    </div>
+  </section>
+
+  <div class="py-12 bg-cream">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-12">
+        <!-- Contact Info -->
+        <div>
+          <h2 class="text-2xl font-bold text-meadow-dark mb-6">Get in Touch</h2>
+
+          <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+            <h3 class="font-semibold text-charcoal mb-3">General Inquiries</h3>
+            <p class="text-gray-600 mb-4">
+              Have a question about an upcoming concert or want to know more about the series?
+            </p>
+            <a
+              href="mailto:hello@meadowlarkconcerts.com"
+              class="text-meadow hover:text-meadow-dark transition-colors"
+            >
+              hello@meadowlarkconcerts.com
+            </a>
+          </div>
+
+          <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+            <h3 class="font-semibold text-charcoal mb-3">Artist Booking</h3>
+            <p class="text-gray-600 mb-4">
+              Are you a musician interested in performing at the Meadowlark Concert Series?
+              We're always looking for talented artists.
+            </p>
+            <a
+              href="mailto:booking@meadowlarkconcerts.com"
+              class="text-meadow hover:text-meadow-dark transition-colors"
+            >
+              booking@meadowlarkconcerts.com
+            </a>
+          </div>
+
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <h3 class="font-semibold text-charcoal mb-3">Location</h3>
+            <address class="not-italic text-gray-600">
+              {venue.name}<br />
+              {venue.address}<br />
+              {venue.city}, {venue.state} {venue.zip}<br />
+              <span class="text-meadow">{venue.neighborhood}, South Austin</span>
+            </address>
+          </div>
+        </div>
+
+        <!-- Mailing List Signup -->
+        <div id="signup">
+          <h2 class="text-2xl font-bold text-meadow-dark mb-6">Join Our Mailing List</h2>
+
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <p class="text-gray-600 mb-6">
+              Be the first to know about upcoming concerts, get early RSVP access,
+              and receive updates about the Meadowlark Concert Series.
+            </p>
+
+<!-- Google Forms powered signup -->
+            <form
+              id="signup-form"
+              class="space-y-4"
+            >
+              <div>
+                <label for="name" class="block text-sm font-medium text-charcoal mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-meadow focus:border-meadow outline-none transition-colors"
+                  placeholder="Your name"
+                />
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-medium text-charcoal mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-meadow focus:border-meadow outline-none transition-colors"
+                  placeholder="you@example.com"
+                />
+              </div>
+
+              <div>
+                <label class="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    name="consent"
+                    required
+                    class="mt-1"
+                  />
+                  <span class="text-sm text-gray-600">
+                    I'd like to receive email updates about upcoming concerts.
+                    We'll never share your email or spam you.
+                  </span>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-meadow hover:bg-meadow-dark text-white font-semibold py-3 rounded-lg transition-colors"
+              >
+                Sign Up
+              </button>
+            </form>
+
+            <script>
+              const form = document.getElementById('signup-form');
+              const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeeRueGNslgEYWQSIXjPXNZi5rOoFku_phteX8Wbn4H86isbQ/formResponse';
+
+              form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData();
+                formData.append('entry.627835089', form.querySelector('#name').value);
+                formData.append('entry.460166804', form.querySelector('#email').value);
+
+                try {
+                  await fetch(GOOGLE_FORM_URL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                  });
+                  window.location.href = '/thank-you';
+                } catch (error) {
+                  window.location.href = '/thank-you';
+                }
+              });
+            </script>
+
+            <p class="text-xs text-gray-500 mt-4">
+              We typically send 1-2 emails per month when we have concerts scheduled.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-2xl font-bold text-meadow-dark mb-8 text-center">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-6">
+        <details class="bg-cream rounded-lg p-6">
+          <summary class="font-semibold text-charcoal cursor-pointer">
+            What should I bring to a house concert?
+          </summary>
+          <p class="mt-3 text-gray-600">
+            We provide seating. Feel free to bring your own drinks and snacks.
+            You might also want to bring cash for the suggested donation, though
+            we can also accept Venmo/PayPal.
+          </p>
+        </details>
+
+        <details class="bg-cream rounded-lg p-6">
+          <summary class="font-semibold text-charcoal cursor-pointer">
+            Is parking available?
+          </summary>
+          <p class="mt-3 text-gray-600">
+            {venue.parkingInfo}
+          </p>
+        </details>
+
+        <details class="bg-cream rounded-lg p-6">
+          <summary class="font-semibold text-charcoal cursor-pointer">
+            Can I bring children?
+          </summary>
+          <p class="mt-3 text-gray-600">
+            Children are welcome, but please use your judgment based on the
+            concert's length and your child's ability to sit quietly during
+            performances. Contact us if you have specific questions about a
+            particular show.
+          </p>
+        </details>
+
+        <details class="bg-cream rounded-lg p-6">
+          <summary class="font-semibold text-charcoal cursor-pointer">
+            What if I need to cancel my RSVP?
+          </summary>
+          <p class="mt-3 text-gray-600">
+            Please let us know as soon as possible if you can't make it so we
+            can offer your spot to someone on the waitlist. You can reply to
+            your confirmation email or contact us directly.
+          </p>
+        </details>
+
+        <details class="bg-cream rounded-lg p-6">
+          <summary class="font-semibold text-charcoal cursor-pointer">
+            How do I find out about upcoming concerts?
+          </summary>
+          <p class="mt-3 text-gray-600">
+            The best way is to join our mailing list above. We announce concerts
+            via email before they're posted anywhere else, giving subscribers
+            first access to RSVP.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+</Layout>

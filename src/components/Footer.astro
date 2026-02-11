@@ -1,0 +1,35 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-charcoal text-white mt-auto">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg font-bold mb-3 text-warm">Meadowlark Concert Series</h3>
+        <p class="text-gray-300 text-sm">
+          Intimate house concerts in the Bauerle Ranch neighborhood of South Austin.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold mb-3 text-warm">Location</h3>
+        <address class="text-gray-300 text-sm not-italic">
+          10500 Beard Avenue<br />
+          Austin, TX 78748
+        </address>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold mb-3 text-warm">Stay Connected</h3>
+        <p class="text-gray-300 text-sm mb-3">
+          Join our mailing list for concert announcements.
+        </p>
+        <a href="/contact#signup" class="text-warm-light hover:text-warm transition-colors text-sm">
+          Sign up for updates &rarr;
+        </a>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
+      &copy; {currentYear} Meadowlark Concert Series. All rights reserved.
+    </div>
+  </div>
+</footer>

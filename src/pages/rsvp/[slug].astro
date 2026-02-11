@@ -1,0 +1,147 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { concerts, getConcertBySlug, formatDate } from '../../data/concerts';
+
+export function getStaticPaths() {
+  return concerts
+    .filter(c => c.status === 'upcoming')
+    .map(concert => ({
+      params: { slug: concert.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+const concert = getConcertBySlug(slug);
+
+if (!concert) {
+  return Astro.redirect('/concerts');
+}
+---
+
+<Layout title={`RSVP - ${concert.artistName}`} description={`RSVP for ${concert.artistName} at the Meadowlark Concert Series`}>
+  <section class="bg-meadow text-white py-12">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h1 class="text-4xl font-bold mb-4">RSVP</h1>
+      <p class="text-xl text-white/90">
+        {concert.artistName} &bull; {formatDate(concert.date)}
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12 bg-cream">
+    <div class="max-w-xl mx-auto px-4">
+      <div class="bg-white rounded-lg p-8 shadow-sm">
+        <div class="mb-6 pb-6 border-b border-gray-200">
+          <h2 class="text-xl font-bold text-charcoal mb-2">{concert.artistName}</h2>
+          <p class="text-gray-600">{formatDate(concert.date)}</p>
+          <p class="text-gray-600">Doors: {concert.doorsTime} &bull; Show: {concert.showTime}</p>
+          <p class="text-meadow font-medium mt-2">Suggested donation: {concert.suggestedDonation}</p>
+        </div>
+
+        <form id="rsvp-form" class="space-y-4">
+          <input type="hidden" id="concert" value={`${concert.artistName} - ${formatDate(concert.date)}`} />
+
+          <div>
+            <label for="name" class="block text-sm font-medium text-charcoal mb-1">
+              Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-meadow focus:border-meadow outline-none transition-colors"
+              placeholder="Your name"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-charcoal mb-1">
+              Email <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-meadow focus:border-meadow outline-none transition-colors"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label for="guests" class="block text-sm font-medium text-charcoal mb-1">
+              Number of Guests <span class="text-red-500">*</span>
+            </label>
+            <select
+              id="guests"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-meadow focus:border-meadow outline-none transition-colors"
+            >
+              <option value="">Select...</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5+">5+</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-charcoal mb-1">
+              Message <span class="text-gray-400">(optional)</span>
+            </label>
+            <textarea
+              id="message"
+              rows="3"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-meadow focus:border-meadow outline-none transition-colors"
+              placeholder="Any questions or notes for us?"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-meadow hover:bg-meadow-dark text-white font-semibold py-3 rounded-lg transition-colors"
+          >
+            Submit RSVP
+          </button>
+        </form>
+
+        <p class="text-xs text-gray-500 mt-4 text-center">
+          We'll send a confirmation email with details about the concert.
+        </p>
+      </div>
+
+      <div class="mt-6 text-center">
+        <a href={`/concerts/${concert.slug}`} class="text-meadow hover:text-meadow-dark transition-colors">
+          &larr; Back to concert details
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('rsvp-form');
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfp85ITDb7LRxNWKhypMLapHCupbsqcKotNyghjP1Yd7HPkFQ/formResponse';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData();
+      formData.append('entry.1049319765', document.getElementById('name').value);
+      formData.append('entry.24407779', document.getElementById('email').value);
+      formData.append('entry.1710774296', document.getElementById('guests').value);
+      formData.append('entry.1053752465', document.getElementById('concert').value);
+      formData.append('entry.1710075639', document.getElementById('message').value);
+
+      try {
+        await fetch(GOOGLE_FORM_URL, {
+          method: 'POST',
+          body: formData,
+          mode: 'no-cors'
+        });
+        window.location.href = '/rsvp-confirmed';
+      } catch (error) {
+        window.location.href = '/rsvp-confirmed';
+      }
+    });
+  </script>
+</Layout>

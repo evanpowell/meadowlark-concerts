@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <rect width="300" height="300" fill="#e8c9a8"/>
+  <circle cx="150" cy="110" r="50" fill="#4a7c59"/>
+  <ellipse cx="150" cy="230" rx="70" ry="50" fill="#4a7c59"/>
+  <text x="150" y="280" text-anchor="middle" fill="#4a7c59" font-family="Georgia, serif" font-size="12">Artist Photo</text>
+</svg>
