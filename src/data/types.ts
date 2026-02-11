@@ -24,6 +24,9 @@ export interface Concert {
   artistImage?: string;
   galleryImages?: string[];
 
+  // Video (YouTube embed ID, e.g., "dQw4w9WgXcQ" from youtube.com/watch?v=dQw4w9WgXcQ)
+  youtubeVideoId?: string;
+
   // RSVP
   rsvpLink: string; // Google Form link
 
@@ -49,6 +52,6 @@ export const venue: VenueInfo = {
   state: "TX",
   zip: "78748",
   neighborhood: "Bauerle Ranch",
-  parkingInfo: "Street parking is available on Beard Avenue. Please be mindful of neighbors and avoid blocking driveways.",
+  parkingInfo: "Street parking is available on Beard Avenue and Drew Lane. Please be mindful of neighbors and avoid blocking driveways.",
   additionalInfo: "Look for the Meadowlark Concert Series sign. Exact details will be provided when you RSVP."
 };

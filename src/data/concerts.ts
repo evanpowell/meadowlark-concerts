@@ -12,13 +12,9 @@ export const concerts: Concert[] = [
     showTime: "7:00 PM",
     suggestedDonation: "$20",
     shortDescription: "Award-winning Irish traditional band featuring concertina, fiddle, bodhrán, and piano.",
-    fullDescription: `The amazing Irish trad band The Consequences will be performing at the Meadowlark Concert Series on Saturday, February 14th. Get ready for an amazing night of music!
+    fullDescription: `Get ready for an amazing night of Irish traditional music with The Consequences!
 
-Some food and drink will be provided, but feel free to bring snacks or beverages to share if you feel inclined. There will also be a session after the show, so bring your instruments if you got 'em!
-
-Though there is a decent amount of seating, if you have a folding chair it's not a bad idea to bring it just in case.
-
-100% of the proceeds will go to the performers.`,
+There will also be a session after the show, so bring your instruments if you got 'em!`,
     artistBio: `Driven by a passion for exploring the colors and complexities of Irish music, The Consequences are a new Irish traditional band founded by Lexie Boatright (concertina & harp), Jake James (fiddle), Cara Wildman (bodhrán & dance), and Ryan Ward (piano & piano accordion). Award-winning soloists in their own right, the quartet comes together to create a dynamic and enthralling sound with a combination of traditional and original tunes.
 
 Lexie Boatright is a multiple All-Ireland award-winning harpist and concertina player and executive director of the Baltimore-Washington Academy of Irish Culture.
@@ -29,6 +25,7 @@ Cara Wildman is a highly sought after bodhrán player at the cutting edge of the
 
 Ryan Ward is an award-winning pianist and accordion player from NYC. He is a Senior All-Ireland Accompaniment Champion and a highly sought after accompanist in the NY area.`,
     artistWebsite: "https://theconsequencesband.com/home",
+    youtubeVideoId: "9jKpjU9RDU8",
     featuredImage: "https://d10j3mvrs1suex.cloudfront.net/s:bzglfiles/u/684926/935add7e27569408466d6612b01eefed7020809b/original/promo-photo2.jpg/!!/b%3AW1sic2l6ZSIsInBob3RvIl1d/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.jpg",
     rsvpLink: "",
     status: "upcoming"
@@ -58,7 +55,9 @@ export function getNextConcert(): Concert | undefined {
 }
 
 export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
+  // Parse as local date to avoid timezone issues
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
   return date.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',

@@ -26,7 +26,7 @@ const isPast = concert.status === 'past';
     <img
       src={concert.featuredImage}
       alt={concert.artistName}
-      class="w-full h-64 md:h-80 object-cover"
+      class="w-full object-contain bg-charcoal" style="max-height: calc(100vh - 72px);"
     />
     <div class="absolute inset-0 z-20 flex items-center justify-center">
       <div class="text-center text-white px-4">
@@ -151,6 +151,25 @@ const isPast = concert.status === 'past';
       </div>
     </div>
   </section>
+
+  <!-- Video -->
+  {concert.youtubeVideoId && (
+    <section id="video" class="py-12 bg-cream">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-meadow-dark mb-6">Watch</h2>
+        <div class="relative w-full" style="padding-bottom: 56.25%;">
+          <iframe
+            class="absolute inset-0 w-full h-full rounded-lg shadow-md"
+            src={`https://www.youtube.com/embed/${concert.youtubeVideoId}`}
+            title={`${concert.artistName} video`}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Location -->
   <section id="location" class="py-12 bg-cream">
