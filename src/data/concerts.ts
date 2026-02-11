@@ -1,6 +1,5 @@
 import type { Concert } from './types';
 
-    artistWebsite: "https://theconsequencesband.com/home",
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVhgVuW7L0f5cESZWBVcgU0PcU3kwa_kiXAIBetchgrVc6hCOTwSspzlYBG1iExoE56CEGZ9bNcsoO/pub?gid=0&single=true&output=csv';
 
 // Parse CSV text into array of objects, handling multi-line quoted fields
