@@ -27,6 +27,10 @@ export interface Concert {
   // Video (YouTube embed ID, e.g., "dQw4w9WgXcQ" from youtube.com/watch?v=dQw4w9WgXcQ)
   youtubeVideoId?: string;
 
+  // Live Stream (for remote viewing)
+  streamVideoId?: string; // YouTube video/stream ID for the private stream
+  streamPassword?: string; // Password to access the stream page
+
   // RSVP
   rsvpLink: string; // Google Form link
 

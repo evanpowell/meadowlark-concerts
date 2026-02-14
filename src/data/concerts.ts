@@ -83,6 +83,8 @@ export async function fetchConcerts(): Promise<Concert[]> {
     featuredImage: row.featuredImage || '',
     artistImage: row.artistImage || undefined,
     youtubeVideoId: row.youtubeVideoId || undefined,
+    streamVideoId: row.streamVideoId || undefined,
+    streamPassword: row.streamPassword || undefined,
     rsvpLink: row.rsvpLink || '',
     status: determineStatus(row.date, row.status),
   }));

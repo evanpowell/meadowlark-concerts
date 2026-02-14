@@ -18,6 +18,7 @@ if (!concert) {
 }
 
 const isPast = concert.status === 'past';
+const hasLiveStream = concert.streamVideoId && concert.streamPassword;
 ---
 
 <Layout title={concert.artistName} description={concert.shortDescription}>
@@ -82,6 +83,23 @@ const isPast = concert.status === 'past';
           </div>
         </div>
       </div>
+
+      {hasLiveStream && (
+        <div class="bg-meadow-dark rounded-lg p-6 shadow-sm mb-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="text-white">
+              <h3 class="text-lg font-semibold">Can't attend in person?</h3>
+              <p class="text-white/80 text-sm">This concert will be live streamed for donors.</p>
+            </div>
+            <a
+              href={`/watch/${concert.slug}`}
+              class="inline-block bg-warm hover:bg-warm-light text-charcoal font-semibold px-6 py-3 rounded-lg transition-colors text-center"
+            >
+              Watch Live
+            </a>
+          </div>
+        </div>
+      )}
 
       <div class="prose prose-lg max-w-none">
         {concert.fullDescription.split('\n\n').map(paragraph => (
