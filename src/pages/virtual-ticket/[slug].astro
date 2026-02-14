@@ -1,0 +1,133 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { fetchConcerts, formatDate } from '../../data/concerts';
+
+export async function getStaticPaths() {
+  const concerts = await fetchConcerts();
+  // Only generate pages for concerts with streaming enabled
+  return concerts
+    .filter(concert => concert.streamVideoId && concert.streamPassword)
+    .map(concert => ({
+      params: { slug: concert.slug },
+      props: { concert },
+    }));
+}
+
+const { concert } = Astro.props;
+
+if (!concert) {
+  return Astro.redirect('/concerts');
+}
+
+const stripePublishableKey = import.meta.env.STRIPE_PUBLISHABLE_KEY || '';
+---
+
+<Layout title={`Virtual Ticket: ${concert.artistName}`} description={`Purchase a virtual ticket to watch ${concert.artistName} live from Meadowlark House`}>
+  <section class="py-12 bg-cream min-h-[80vh]">
+    <div class="max-w-2xl mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <p class="text-meadow font-medium mb-2">Virtual Ticket</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-meadow-dark mb-2">{concert.artistName}</h1>
+        <p class="text-gray-600">{formatDate(concert.date)}</p>
+      </div>
+
+      <!-- Concert Image -->
+      <div class="mb-8 rounded-lg overflow-hidden shadow-md">
+        <img
+          src={concert.featuredImage}
+          alt={concert.artistName}
+          class="w-full h-48 object-cover"
+        />
+      </div>
+
+      <!-- Purchase Card -->
+      <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+        <h2 class="text-xl font-bold text-charcoal mb-4">Can't make it in person?</h2>
+        <p class="text-gray-600 mb-6">
+          Watch the concert live from wherever you are. After purchase, you'll receive an email with your access code and link to the private stream.
+        </p>
+
+        <div class="border-t border-b border-gray-200 py-6 mb-6">
+          <label for="amount" class="block text-sm font-semibold text-gray-700 mb-2">
+            Choose your amount (minimum $10)
+          </label>
+          <div class="flex items-center gap-2">
+            <span class="text-2xl text-gray-500">$</span>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              min="10"
+              value="20"
+              class="text-3xl font-bold text-meadow-dark w-24 border-b-2 border-meadow focus:outline-none focus:border-meadow-dark bg-transparent"
+            />
+          </div>
+          <p class="text-sm text-gray-500 mt-2">100% of your contribution goes to the artist</p>
+        </div>
+
+        <button
+          id="checkout-button"
+          class="w-full bg-meadow hover:bg-meadow-dark text-white font-semibold px-6 py-4 rounded-lg transition-colors text-lg"
+        >
+          Purchase Virtual Ticket
+        </button>
+
+        <p class="text-center text-sm text-gray-500 mt-4">
+          Secure payment powered by Stripe
+        </p>
+      </div>
+
+      <!-- Back Link -->
+      <div class="mt-8 text-center">
+        <a href={`/concerts/${concert.slug}`} class="text-meadow hover:text-meadow-dark transition-colors">
+          &larr; Back to Concert Details
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ concert: { slug: concert.slug, artistName: concert.artistName, streamPassword: concert.streamPassword }, stripePublishableKey }}>
+    const checkoutButton = document.getElementById('checkout-button');
+    const amountInput = document.getElementById('amount');
+
+    checkoutButton.addEventListener('click', async () => {
+      const amount = parseInt(amountInput.value, 10);
+
+      if (isNaN(amount) || amount < 10) {
+        alert('Please enter an amount of at least $10');
+        return;
+      }
+
+      checkoutButton.disabled = true;
+      checkoutButton.textContent = 'Processing...';
+
+      try {
+        const response = await fetch('/.netlify/functions/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: amount * 100, // Convert to cents
+            concertSlug: concert.slug,
+            concertName: concert.artistName,
+            streamPassword: concert.streamPassword,
+          }),
+        });
+
+        const { url, error } = await response.json();
+
+        if (error) {
+          throw new Error(error);
+        }
+
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Something went wrong. Please try again.');
+        checkoutButton.disabled = false;
+        checkoutButton.textContent = 'Purchase Virtual Ticket';
+      }
+    });
+  </script>
+</Layout>

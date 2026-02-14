@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Purchase Complete" description="Your virtual ticket purchase was successful">
+  <section class="py-12 bg-cream min-h-[80vh]">
+    <div class="max-w-2xl mx-auto px-4">
+      <!-- Loading State -->
+      <div id="loading" class="text-center">
+        <div class="animate-pulse">
+          <div class="w-16 h-16 bg-meadow/20 rounded-full mx-auto mb-4"></div>
+          <p class="text-gray-600">Loading your ticket details...</p>
+        </div>
+      </div>
+
+      <!-- Success Content (hidden until loaded) -->
+      <div id="success-content" class="hidden">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-meadow rounded-full mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h1 class="text-3xl font-bold text-meadow-dark mb-2">Thank You!</h1>
+          <p class="text-gray-600">Your virtual ticket purchase was successful.</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+          <h2 class="text-xl font-bold text-charcoal mb-4">How to Watch</h2>
+
+          <div class="space-y-4">
+            <div class="bg-cream rounded-lg p-4">
+              <p class="text-sm font-semibold text-gray-500 uppercase mb-1">Watch Page</p>
+              <a id="watch-url" href="#" class="text-meadow hover:text-meadow-dark break-all"></a>
+            </div>
+
+            <div class="bg-cream rounded-lg p-4">
+              <p class="text-sm font-semibold text-gray-500 uppercase mb-1">Access Code</p>
+              <p id="access-code" class="text-2xl font-mono font-bold text-meadow-dark"></p>
+            </div>
+          </div>
+
+          <div class="mt-6 p-4 bg-warm/10 rounded-lg">
+            <p class="text-sm text-charcoal">
+              <strong>Check your email!</strong> We've sent these details to your email address as well.
+              The stream will be available on the day of the concert.
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <a
+            id="watch-link"
+            href="#"
+            class="inline-block bg-meadow hover:bg-meadow-dark text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+          >
+            Go to Watch Page
+          </a>
+        </div>
+      </div>
+
+      <!-- Error State (hidden) -->
+      <div id="error-content" class="hidden text-center">
+        <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-charcoal mb-2">Something went wrong</h1>
+        <p class="text-gray-600 mb-6">We couldn't retrieve your ticket details. Please check your email for confirmation.</p>
+        <a href="/concerts" class="text-meadow hover:text-meadow-dark">
+          &larr; Back to Concerts
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Get session_id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    const loading = document.getElementById('loading');
+    const successContent = document.getElementById('success-content');
+    const errorContent = document.getElementById('error-content');
+
+    if (!sessionId) {
+      loading.classList.add('hidden');
+      errorContent.classList.remove('hidden');
+    } else {
+      // Fetch session details
+      fetch(`/.netlify/functions/get-session?session_id=${sessionId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          const { concertSlug, streamPassword } = data;
+          const watchUrl = `${window.location.origin}/watch/${concertSlug}`;
+
+          document.getElementById('watch-url').textContent = watchUrl;
+          document.getElementById('watch-url').href = watchUrl;
+          document.getElementById('access-code').textContent = streamPassword;
+          document.getElementById('watch-link').href = watchUrl;
+
+          loading.classList.add('hidden');
+          successContent.classList.remove('hidden');
+        })
+        .catch(error => {
+          console.error('Error fetching session:', error);
+          loading.classList.add('hidden');
+          errorContent.classList.remove('hidden');
+        });
+    }
+  </script>
+</Layout>
