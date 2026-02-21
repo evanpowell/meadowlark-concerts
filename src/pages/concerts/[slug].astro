@@ -84,7 +84,7 @@ const hasLiveStream = concert.streamVideoId && concert.streamPassword;
         </div>
       </div>
 
-      {hasLiveStream && (
+      {hasLiveStream && !isPast && (
         <div class="bg-meadow-dark rounded-lg p-6 shadow-sm mb-8">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="text-white">
